@@ -1,0 +1,30 @@
+{
+  "name": "com.inseye.unity.sdk.samples.adapter",
+  "rootNamespace": "Inseye",
+  "references": [
+    "GUID:3a737da3c80c70148a4b9b53360bcf14",
+    "GUID:75469ad4d38634e559750d17036d5f7c",
+    "GUID:fe685ec1767f73d42b749ea8045bfe43",
+    "GUID:4847341ff46394e83bb78fbd0652937e"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [
+    {
+      "name": "com.unity.xr.openxr",
+      "expression": "0.0.0",
+      "define": "OPENXR"
+    },
+    {
+      "name": "com.unity.xr.openxr",
+      "expression": "1.6.0",
+      "define": "OPENXR_1_6_OR_NEWER"
+    }
+  ],
+  "noEngineReferences": false
+}

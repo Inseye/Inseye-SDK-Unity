@@ -1,0 +1,17 @@
+{
+  "name": "com.inseye.unity.sdk.samples.mock",
+  "rootNamespace": "Inseye",
+  "references": [
+    "GUID:3a737da3c80c70148a4b9b53360bcf14",
+    "GUID:75469ad4d38634e559750d17036d5f7c"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

@@ -1,0 +1,5 @@
+*.csproj
+*.sln
+**/[Oo]bj/**
+**/[Oo]bj.meta
+Samples~.meta

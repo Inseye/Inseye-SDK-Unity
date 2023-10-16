@@ -1,0 +1,21 @@
+{
+  "name": "com.inseye.unity.sdk",
+  "rootNamespace": "Inseye",
+  "references": [],
+  "includePlatforms": [
+    "Android",
+    "Editor",
+    "LinuxStandalone64",
+    "CloudRendering",
+    "WindowsStandalone32",
+    "WindowsStandalone64"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": true,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

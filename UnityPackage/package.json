@@ -1,0 +1,34 @@
+{
+  "name": "com.inseye.unity.sdk",
+  "version": "4.2.1",
+  "displayName": "InsEye Unity SDK",
+  "description": "InsEye photosensor based eyetracker software development kit.",
+  "unity": "2021.3",
+  "dependencies": {
+    "com.unity.inputsystem": "1.3.0",
+    "com.unity.xr.interaction.toolkit": "2.4.0"
+  },
+  "license": "See LICENSE",
+  "licenseUrl": "https://github.com/Inseye/Licenses/blob/master/SDKLicense.txt",
+  "author": {
+    "name": "Inseye Inc.",
+    "email": "mateusz.chojnowski@inseye.com"
+  },
+  "samples": [
+    {
+      "displayName": "Calibration",
+      "description": "Calibration scene sample",
+      "path": "Samples~/Calibration"
+    },
+    {
+      "displayName": "Mocks",
+      "description": "Eye-tracker mocks using unity input system as source of fake gaze data",
+      "path": "Samples~/Mocks"
+    },
+    {
+      "displayName": "InseyeGazeInputAdapter",
+      "description": "MonoBehaviour that injects Inseye eye tracker data into the Unity input system.",
+      "path": "Samples~/InseyeGazeInputAdapter"
+    }
+  ]
+}

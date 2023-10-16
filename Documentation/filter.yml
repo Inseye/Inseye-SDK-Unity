@@ -1,0 +1,9 @@
+apiRules:
+  - include:
+      hasAttribute:
+        uid: UnityEngine.SerializeField
+  - include:
+    hasAttribute:
+      uid: System.ComponentModel.EditorBrowsableAttribute
+      ctorArguments:
+      - System.ComponentModel.EditorBrowsableState.Never

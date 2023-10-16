@@ -1,0 +1,264 @@
+LIMITED LICENSE AGREEMENT 
+
+This limited license agreement ("Agreement") grants you ("You") a limited right 
+to use the Software Development Kit (“SDK”) and other software and related files
+that you have downloaded, or otherwise obtained, which includes software owned 
+by Inseye Inc. with its registered seat in New York, USA, at: 6 Eliza Street, 
+Beacon NY 12508, USA ("Inseye"), ("Licensed Software") according to the 
+following terms and conditions.  
+
+You enter into this Agreement by installing or using the Licensed Software. 
+
+Inseye and You are a “Party” to this Agreement and referred to together as 
+“Parties”. 
+
+WHEREAS: 
+
+A.  Inseye is a supplier of hardware and software solutions, either standalone 
+    or as part of third-party products, for eye tracking which contain 
+    intellectual property rights owned by Inseye; 
+
+B.  You desire to license from Inseye to use certain Licensed Software as 
+    defined by this Agreement.
+
+BY DOWNLOADING, INSTALLING, USING, ACCESSING OR DISTRIBUTING THE LICENSED 
+SOFTWARE YOU AGREE THAT: 
+
+§ 1. PURPOSE 
+
+1.  The Licensed Software may be used only for personal and non-commercial use 
+    under this Agreement. 
+
+2.  Under this Agreement, you may not develop software that stores eye tracking 
+    data or transfers eye tracking data to another device or network. 
+
+3.  Under this Agreement, you may not develop software for medical solutions or 
+    medical equipment.  
+
+4.  No support or maintenance for the Licensed Software is provided to you under
+    this Agreement or any other services which are not explicitly stated herein.
+
+5.  Please note that the Licensed Software is only for use with Inseye's related
+    hardware and software, and you may not use it to develop or evaluate 
+    competing eye tracking technologies.  
+
+6.  You may only enter into this Agreement and use the Licensed Software if you 
+    are legally permitted to enter into a binding contract with Inseye.  
+
+7.  The terms of this Agreement will apply to any updates that Inseye makes 
+    available to You. You agree that updates may require You to change or update
+    your application and may affect your ability to use, access or interact with
+    Licensed Software. Inseye may amend this Agreement at any time, without 
+    notice to You, by posting the revised terms on website 
+    https://github.com/Inseye/Licenses/blob/master/SDKLicense.txt.    
+
+§ 2. DEFINITIONS 
+
+The terms below are defined as follows under this Agreement:  
+
+“Eye Tracking Data” means data about a user’s eye gaze, eye images, pupil size,
+facial expression, presence, behaviour, head pose or position from Inseye Eye 
+Tracking, in raw or processed form, on its own or in combination with other 
+information.    
+
+“Intellectual Property Rights” means patents, rights to apply for patents, 
+trademarks, trade names, service marks, domain names, copyrights and all 
+applications and registrations of such worldwide, schematics, industrial models,
+inventions, know-how, trade secrets, computer software programs and other 
+intangible proprietary information.  
+
+“Licensed Software” means the Software provided to You by Inseye, including the
+SDK, all included files, directories, documentation, and associated API function 
+calls.  
+
+“Your Software” means software developed by You, including all object code, 
+source code, and any documentation thereof. 
+
+§ 3. PERMITTED USE 
+
+1.  Inseye provides You limited rights to use the Licensed Software subject to
+    the terms and restrictions contained in this Agreement.
+
+2.  Your use of the Licensed Software is strictly permitted solely to develop
+    Software for your own personal and non-commercial use (“Your Use”). 
+
+§ 4. LICENSE 
+
+1.  Subject to terms of this Agreement, Inseye grants You a limited, 
+    non-exclusive, non-transferable, non-sublicensable, royalty-free, revocable, 
+    license: 
+        a)  to use the Licensed Software solely to develop Your Software for 
+            Your Use; and 
+        b)  to any Intellectual Property Rights owned by Inseye covering binary 
+            files, or example source code, in the Licensed Software, necessary 
+            for Your Use.
+
+2.  The license covers fields of exploitation for:  
+    *   permanent or temporary reproduction of the Licensed Software in whole or 
+        in part by any means and in any form; to the extent that reproduction is    
+        necessary for the introduction, display, use, transmission and storage 
+        of the Licensed Software, these activities require the permission of the 
+        authorized party; 
+    *   translation, adaptation, rearrangement or any other changes in the 
+        Licensed Software, with preservation of the rights of the person who 
+        made such changes; 
+
+3.  The grant of the license shall not be limited in territory and shall 
+    cover the entire world.
+
+4.  You are authorized to exercise subsidiary rights to the Licensed Software, 
+    in particular, You are authorized to make modifications, changes, additions, 
+    adaptations or alterations to the Licensed Software.
+
+5.  The Parties agree on the following content of the legal notice that shall 
+    accompany the fixation, reproduction and distribution of the Licensed 
+    Software by You owned by Inseye Inc.
+
+6.  You are absolutely prohibited from granting further licenses (sublicenses) 
+    concerning the Licensed Software or its parts (fragments) to any third 
+    parties (entities), regardless of the formal legal basis of such sublicense, 
+    the legal title of such sublicense, the name of the agreement, etc.  
+
+7.  The license rights in this Paragraph are conditional upon compliance with 
+    all terms in this Agreement and, specifically, the following:
+    a)  You may not commercialise, sell, lease or profit from Your Software, 
+        including by providing ancillary services in relation to it.
+    b)  You may not use the Licensed Software on other eye tracking platforms 
+        than those produced by Inseye, or platforms that include Inseye's 
+        hardware. 
+    c)  Your Software may not store or transfer the Eye Tracking Data on or to 
+        any other application, computing device or network.
+    d)  Your Software must not allow other software to access Eye Tracking
+        Data that originates from the Licensed Software.  
+
+§ 5. USE RESTRICTIONS
+
+1.  Except as expressly permitted by this Agreement, You will not, nor permit or 
+    authorize anyone to:
+    a)  distribute, convey, lend, lease, share, sell, transfer, sublicense, 
+        rent, or time share the Licensed Software, or any of its components or 
+        license files, or permit third parties to download or install the 
+        Licensed Software;
+    b)  copy, decompile, disassemble or reverse engineer or otherwise attempt to
+        extract or derive the source code or any methods, algorithms or 
+        procedures from the Licensed Software, or modify, adapt, translate or 
+        create derivative works based upon the Inseye's products except as 
+        otherwise expressly permitted by applicable law; 
+    c)  use the Licensed Software if You are a competitor, or use the Licensed
+        Software in any manner that competes with Inseye, including but not
+        limited to, benchmarking, collecting and publishing data or analysis
+        relating to the performance of the Licensed Software, or developing or
+        marketing a product that is competitive with any Inseye's product or
+        service; 
+    d)  remove any copyright, trademark or other proprietary notice from the
+        Licensed Software;
+    e)  alter or circumvent any product, key or license restrictions or
+        limitations on Licensed Software to exceed purchased quantities or to
+        defeat any restrictions on access or use. 
+
+§ 6. OWNERSHIP OF LICENSED SOFTWARE 
+
+Except for the licenses explicitly granted to You, Inseye retains all right, 
+title, and interest in and to the Licensed Software, including all updates and 
+modifications and derivative works created, whether or not specifically
+recognized, registered, or perfected under the laws of the country in which the 
+Licensed Software is located.  You do not own any rights, including the
+copyright or any other Intellectual Property Rights, in the Licensed Software.  
+Your rights to use the Licensed Software are strictly as specified in this 
+Agreement. 
+
+§ 7. USAGE DATA TO ENHANCE USER EXPERIENCE 
+
+The Licensed Software may report anonymous usage statistics and/or error and bug
+reports to Inseye's servers in order to identify problems that may affect the 
+technical stability and/or overall quality of the application, as well as inform 
+Inseye which of the program components have been in use. For the avoidance of 
+doubt, this data does not include Eye Tracking Data. 
+
+§ 8. SUPPORT & MAINTENANCE 
+
+Inseye will not provide You with any support for, or maintenance of, the 
+Licensed Software, including no obligation to provide updates to the Licensed 
+Software. 
+
+§ 9. MEDICAL OR HIGH-RISK USE 
+
+1.  You may not develop Your Software for Medical Use under this Agreement. 
+    “Medical Use” is any use in medically classified devices or environments, 
+    for instance hospitals, surgeries, or other healthcare environments. 
+    Examples of Medical Use include systems for Assistive and Alternative 
+    Communication (AAC), medical condition assessment solutions, vision or eye 
+    condition solutions and solutions or systems intended to be used in 
+    hospitals, surgeries and doctor’s consulting rooms.
+
+2.  You have no right to develop Your Software for High-Risk Use. 
+    “High Risk Use” is use in any environment where failure or fault of any kind 
+    could lead to death or serious bodily injury of any person, or to severe 
+    physical or environmental damage.  High Risk Use includes, but is not 
+    limited to,  aircraft navigation, control of other modes of human mass 
+    transportation, military applications and control of nuclear or chemical 
+    facilities.
+
+ § 10. LIMITATION OF LIABILITY AND INDEMNIFICATION
+
+ 1. In no event will Inseye be liable for the following, whether arising out of 
+    the use of, or inability to use, the Licensed Software, or for any other 
+    reason, even if it has been advised of the possibility of such damages: 
+    (a) indirect, incidental, special or consequential damages; 
+    (b) loss or corruption of data or interrupted or loss of business; 
+    or (c) loss of revenue, profits, goodwill or anticipated sales or savings. 
+    Inseye and its affiliates, officers, directors, employees, agents and 
+    suppliers’ maximum liability arising out of, or in connection with, the 
+    Licensed Software regardless of the cause of action, whether in tort 
+    (including negligence), breach, warranty, contract or otherwise will not 
+    exceed USD $100. Some jurisdictions do not allow the limitation or exclusion 
+    of liability.   Accordingly, some of these limitations may not apply to You.  
+    To the extent that Inseye may not, as a matter of applicable law, disclaim 
+    any implied warranty or limit its liabilities, the scope of duration of such 
+    warranty and the extent of Inseye’s liability shall be the minimum permitted 
+    under such applicable law. 
+
+2.  You agree to indemnify, defend and hold harmless Inseye and its licensors, 
+    affiliates, contractors, officers, directors, employees or agents from any 
+    and all third-party claims, liabilities, damages, costs and expenses, 
+    including reasonable attorney fees, arising from your violation of any 
+    provision of this Agreement. 
+ 
+§ 11. TERM AND TERMINATION
+
+1.  This Agreement remains in force until termination. 
+
+2.  Inseye may terminate this Agreement at any time for convenience. 
+
+3.  Upon termination, all obligations relating to the ownership of the Licensed 
+    Technology and any indemnification or liability obligations survive.
+
+§ 12. GENERAL 
+
+1.  Inseye may amend this Agreement at any time, without notice to You,
+    by posting the revised terms on website 
+    https://github.com/Inseye/Licenses/blob/master/SDKLicense.txt. 
+
+2.  You may not assign this Agreement or any of its rights, interests, 
+    or obligations hereunder. 
+
+3.  Inseye makes no warranty, either express or implied, relating to the 
+    Licensed Software and Inseye further expressly disclaims, to the extent 
+    permitted by applicable law, all warranties and conditions of any kind 
+    related thereto, whether express or implied, including but not limited to, 
+    any implied warranties and conditions of merchantability, accuracy, 
+    or fitness for a particular purpose. 
+
+4.  This Agreement will be governed by and construed according to the laws of 
+    the United States state of New York (without regard to conflict of laws 
+    principles), all rights and remedies being governed by said laws. 
+    Any dispute or conflict under this Agreement shall be finally settled by the 
+    court competent for registered seat of Inseye.   
+
+5.  Regardless of the above governing law, Inseye may seek interim injunctive 
+    relief respect to any alleged breach of its Intellectual Property Rights, or 
+    any other proprietary rights. 
+
+6.  You shall keep all information related to the Licensed Software confidential 
+    and You shall not disclose such information to any third party without 
+    Inseye's prior written consent.

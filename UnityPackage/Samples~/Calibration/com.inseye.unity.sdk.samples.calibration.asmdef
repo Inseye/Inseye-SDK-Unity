@@ -1,0 +1,23 @@
+{
+  "name": "com.inseye.unity.sdk.samples.calibration",
+  "rootNamespace": "Inseye",
+  "references": [
+    "GUID:3a737da3c80c70148a4b9b53360bcf14",
+    "GUID:6055be8ebefd69e48b49212b09b47b2f"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [
+    {
+      "name": "Unity",
+      "expression": "2019",
+      "define": "INSEYE_SDK_CALIBRATION"
+    }
+  ],
+  "noEngineReferences": false
+}

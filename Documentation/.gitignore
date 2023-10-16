@@ -1,0 +1,13 @@
+###############
+#    folder   #
+###############
+/**/DROP/
+/**/TEMP/
+/**/packages/
+/**/bin/
+/**/obj/
+/api/*
+!/api/index.md
+_site
+_pdf_out
+*.meta
