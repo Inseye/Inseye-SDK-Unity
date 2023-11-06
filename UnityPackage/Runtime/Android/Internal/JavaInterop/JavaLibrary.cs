@@ -11,7 +11,7 @@ using System;
 using Inseye.Exceptions;
 using UnityEngine;
 
-namespace Inseye.Android.Internal
+namespace Inseye.Android.Internal.JavaInterop
 {
     internal class JavaLibrary
     {
@@ -22,7 +22,7 @@ namespace Inseye.Android.Internal
 
         private AndroidJavaClass _javaClass;
 
-        public ErrorCodes Initialize(IntPtr statePointer, long timeout)
+        public ErrorCodes Initialize(string callbackObject, long timeout)
         {
             ThrowIfNotOnMainThread();
             try
@@ -30,7 +30,7 @@ namespace Inseye.Android.Internal
                 if (!_initialized)
                     _javaClass = new AndroidJavaClass("com.inseye.unitysdk.UnitySDK");
                 _initialized = true;
-                return (ErrorCodes) _javaClass.CallStatic<int>("initialize", (long) statePointer, timeout);
+                return (ErrorCodes) _javaClass.CallStatic<int>("initialize", callbackObject, timeout);
             }
             catch (AndroidJavaException androidJavaException)
             {
@@ -162,14 +162,14 @@ namespace Inseye.Android.Internal
             return _javaClass.CallStatic<string>("endRecordingRawData");
         }
 
-        public void Dispose(IntPtr statePointer)
+        public void Dispose()
         {
             if (!_initialized)
                 return;
             ThrowIfNotOnMainThread();
             try
             {
-                var returnCode = (ErrorCodes) _javaClass.CallStatic<int>("dispose", (long) statePointer);
+                var returnCode = (ErrorCodes) _javaClass.CallStatic<int>("dispose");
                 switch (returnCode)
                 {
                     case ErrorCodes.Successful:

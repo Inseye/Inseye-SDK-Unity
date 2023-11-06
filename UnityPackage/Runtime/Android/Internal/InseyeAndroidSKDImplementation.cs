@@ -10,6 +10,7 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using Inseye.Android.Internal.JavaInterop;
 using Inseye.Exceptions;
 using Inseye.Interfaces;
 using Inseye.Internal;
@@ -32,11 +33,11 @@ namespace Inseye.Android.Internal
         }
 
         private readonly JavaLibrary _javaLibrary = new();
-        private readonly PinnedInt _pinnedStateInt = new();
         private bool _androidMessageListenerContributesState;
         private Eyes _dominantEye;
         private IGazeDataSource _inseyeIGazeDataSource = EmptyInseyeIGazeDataSource.Instance;
         private InseyeGazeData _internalGazeData;
+        private readonly AndroidMessageListener _androidMessageListener;
 
         private static readonly (InseyeComponentVersion minimum, InseyeComponentVersion maximum) VersionConstraints =
             new(new InseyeComponentVersion(0, 8, 0), new InseyeComponentVersion(1, 0, 0));
@@ -44,6 +45,7 @@ namespace Inseye.Android.Internal
         public InseyeAndroidSKDImplementation()
         {
             Application.focusChanged += FocusChangedHandler;
+            _androidMessageListener = AndroidMessageListener.CreateInstance();
         }
 
         /// <inheritdoc cref="Interfaces.ICalibrationProcedure.ReportReadyToDisplayPoints" />
@@ -94,12 +96,12 @@ namespace Inseye.Android.Internal
         {
             add
             {
-                AndroidMessageListener.AddListener(value);
+                _androidMessageListener.AddListener(value);
                 SubscribeToEyetrackerEvents();
             }
             remove
             {
-                AndroidMessageListener.RemoveListener(value);
+                _androidMessageListener.RemoveListener(value);
                 OptionallyUnsubscribeFromEyetrackerEvents();
             }
         }
@@ -108,7 +110,7 @@ namespace Inseye.Android.Internal
 
         public void TransferListenersTo(ISDKEventsBroker target)
         {
-            var listeners = AndroidMessageListener.RemoveAllListeners();
+            var listeners = _androidMessageListener.RemoveAllListeners();
             target.EyeTrackerAvailabilityChanged += listeners;
             target.MostAccurateEyeChanged += MostAccurateEyeChanged;
             MostAccurateEyeChanged = null;
@@ -116,7 +118,7 @@ namespace Inseye.Android.Internal
 
         public void InvokeEyeTrackerAvailabilityChanged(InseyeEyeTrackerAvailability availability)
         {
-            AndroidMessageListener.Invoke(availability);
+            _androidMessageListener.SetAvailability(availability);
         }
 
         /// <inheritdoc cref="ISDKImplementation.EventBroker" />
@@ -202,8 +204,10 @@ namespace Inseye.Android.Internal
         {
             TransitionToState(InseyeSDKState | InseyeSDKState.Initialized); // temp enter state if needed
             try
-            {
-                return _javaLibrary.GetEyeTrackerAvailability();
+            { 
+                var availability = _javaLibrary.GetEyeTrackerAvailability();
+                _androidMessageListener.SetAvailability(availability);
+                return availability;
             }
             finally
             {
@@ -266,7 +270,7 @@ namespace Inseye.Android.Internal
             {
                 if (!_androidMessageListenerContributesState)
                 {
-                    ((ISDKStateManager) this).RequireState(AndroidMessageListener.Instance);
+                    ((ISDKStateManager) this).RequireState(_androidMessageListener);
                     _androidMessageListenerContributesState = true;
                 }
             }
@@ -294,10 +298,9 @@ namespace Inseye.Android.Internal
         {
             try
             {
-                if (!AndroidMessageListener.Instantiated) return;
-                if (AndroidMessageListener.SubscribersCount == 0 && _androidMessageListenerContributesState)
+                if (_androidMessageListener.SubscribersCount == 0 && _androidMessageListenerContributesState)
                 {
-                    ((ISDKStateManager) this).RemoveListener(AndroidMessageListener.Instance);
+                    ((ISDKStateManager) this).RemoveListener(_androidMessageListener);
                     _androidMessageListenerContributesState = false;
                 }
             }
@@ -344,7 +347,7 @@ namespace Inseye.Android.Internal
 #if DEBUG_INSEYE_SDK
             Debug.Log($"{nameof(InseyeAndroidSKDImplementation)}::{nameof(EnterInitialized)}: initializing");
 #endif
-            var initializationReturnCode = _javaLibrary.Initialize(_pinnedStateInt.GetValuePointer(), 2000);
+            var initializationReturnCode = _javaLibrary.Initialize(_androidMessageListener.name, 2000);
             switch (initializationReturnCode)
             {
                 case ErrorCodes.Successful:
@@ -381,7 +384,7 @@ namespace Inseye.Android.Internal
 
         private void ExitInitialized()
         {
-            _javaLibrary.Dispose(_pinnedStateInt.GetValuePointer());
+            _javaLibrary.Dispose();
         }
 
         private void EnterGazeReadingState()
@@ -496,7 +499,8 @@ namespace Inseye.Android.Internal
                     break;
                 case ErrorCodes.UnknownErrorCheckErrorMessage:
                     throw new SDKInternalException(
-                        _javaLibrary!.GetLastErrorMessage());
+                        _javaLibrary
+                            !.GetLastErrorMessage());
                 default:
                     throw new SDKInternalException($"Invalid/unexpected error code: {errorCode:G}");
             }
@@ -539,7 +543,7 @@ namespace Inseye.Android.Internal
         /// <summary>
         ///     SDK state controlled by java library.
         /// </summary>
-        public InseyeSDKState InseyeSDKState => (InseyeSDKState) _pinnedStateInt.Value;
+        public InseyeSDKState InseyeSDKState => _androidMessageListener.LastSDKState;
 
         void ISDKStateManager.RequireState(IStateUser stateUser)
         {
@@ -651,7 +655,7 @@ namespace Inseye.Android.Internal
             try
             {
                 if (disposing)
-                    _javaLibrary.Dispose(_pinnedStateInt.GetValuePointer());
+                    _javaLibrary.Dispose();
             }
             catch (Exception e)
             {
@@ -659,7 +663,6 @@ namespace Inseye.Android.Internal
             }
             finally
             {
-                _pinnedStateInt.Dispose();
                 Application.focusChanged -= FocusChangedHandler;
             }
         }

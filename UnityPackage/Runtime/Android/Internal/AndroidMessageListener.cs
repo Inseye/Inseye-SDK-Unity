@@ -8,18 +8,19 @@
 // All other rights reserved.
 
 using System;
+using Inseye.Android.Internal.JavaInterop;
 using Inseye.Internal.Extensions;
 using Inseye.Internal.Interfaces;
 using UnityEngine;
 
 namespace Inseye.Android.Internal
 {
-    internal sealed class EyeTrackerAvailabilityEvent
+    internal sealed class PooledEventSource<T>
     {
-        private InseyeEyeTrackerAvailability _lastEvent;
+        private T _lastEvent;
         public bool HasEvent { get; private set; }
 
-        public bool TryConsumeEvent(ref InseyeEyeTrackerAvailability value)
+        public bool TryConsumeEvent(ref T value)
         {
             lock (this)
             {
@@ -34,7 +35,7 @@ namespace Inseye.Android.Internal
             }
         }
 
-        public void SetEvent(InseyeEyeTrackerAvailability value)
+        public void SetEvent(T value)
         {
             lock (this)
             {
@@ -44,52 +45,41 @@ namespace Inseye.Android.Internal
         }
     }
 
-    internal sealed class AndroidMessageListener : MonoBehaviour, IStateUser
+    internal sealed class AndroidMessageListener : JavaAndroidCallback, IStateUser
     {
-        private static AndroidMessageListener _instance;
-        private readonly EyeTrackerAvailabilityEvent _eventContainer = new();
+        private readonly PooledEventSource<InseyeEyeTrackerAvailability> _availabilitySource = new();
+        private readonly PooledEventSource<InseyeSDKState> _stateSource = new();
+        public InseyeSDKState LastSDKState { get; private set; }
+        public InseyeEyeTrackerAvailability LastAvailability { get; private set; }
         private bool _disposed;
 
         private Action<InseyeEyeTrackerAvailability> _listeners;
-        public static bool Instantiated { get; private set; }
-        public static int SubscribersCount { get; private set; }
+        public int SubscribersCount { get; private set; }
 
-        public static AndroidMessageListener Instance
+        public static AndroidMessageListener CreateInstance()
         {
-            get
+            var gameObject = new GameObject(Guid.NewGuid().ToString())
             {
-                if (!Instantiated)
-                {
-                    var gameObject = new GameObject(nameof(AndroidMessageListener))
-                    {
-                        hideFlags = HideFlags.HideInHierarchy
-                    };
-                    _instance = gameObject.AddComponent<AndroidMessageListener>();
-                    Instantiated = true;
-                    DontDestroyOnLoad(gameObject);
-                }
-
-                return _instance;
-            }
+                hideFlags = HideFlags.HideInHierarchy
+            };
+            DontDestroyOnLoad(gameObject);
+            return gameObject.AddComponent<AndroidMessageListener>();
         }
 
         private void Update()
         {
             InseyeEyeTrackerAvailability availability = default;
-            if (!(_eventContainer.HasEvent && _eventContainer.TryConsumeEvent(ref availability)))
-                return;
-            _listeners.SafeInvoke(availability);
-        }
+            InseyeSDKState state = default;
+            if (_availabilitySource.HasEvent && _availabilitySource.TryConsumeEvent(ref availability))
+                _listeners.SafeInvoke(availability);
+            if (_stateSource.HasEvent && _stateSource.TryConsumeEvent(ref state))
+                LastSDKState = state;
 
+        }
+        
         private void OnDestroy()
         {
-            _disposed = true;
-            if (_instance == this)
-            {
-                SubscribersCount = 0;
-                _instance = null;
-                Instantiated = false;
-            }
+            // TODO: There is possibility that AndroidMessageListener will be destroyed before java disposal
         }
 
         public InseyeSDKState RequiredInseyeSDKState =>
@@ -103,45 +93,43 @@ namespace Inseye.Android.Internal
             Destroy(this);
         }
 
-        public static void Invoke(InseyeEyeTrackerAvailability availability)
+        public void SetAvailability(InseyeEyeTrackerAvailability availability)
         {
-            Instance._listeners?.Invoke(availability);
+            if (availability == LastAvailability)
+                return;
+            LastAvailability = availability;
+            _listeners?.Invoke(availability);
         }
 
-        public static void AddListener(Action<InseyeEyeTrackerAvailability> @delegate)
+        public void AddListener(Action<InseyeEyeTrackerAvailability> @delegate)
         {
-            Instance._listeners += @delegate;
-            SubscribersCount = Instance._listeners != null ? Instance._listeners.GetInvocationList().Length : 0;
+            _listeners += @delegate;
+            SubscribersCount = _listeners.GetInvocationList().Length;
         }
 
-        public static Action<InseyeEyeTrackerAvailability> RemoveAllListeners()
+        public Action<InseyeEyeTrackerAvailability> RemoveAllListeners()
         {
-            if (!Instantiated)
-                return default;
             SubscribersCount = 0;
-            var listeners = Instance._listeners;
-            Instance._listeners = null;
+            var listeners = _listeners;
+            _listeners = null;
             return listeners;
         }
 
-        public static void RemoveListener(Action<InseyeEyeTrackerAvailability> @delegate)
+        public void RemoveListener(Action<InseyeEyeTrackerAvailability> @delegate)
         {
-            if (!Instantiated)
-                return;
-            Instance._listeners -= @delegate;
-            SubscribersCount = Instance._listeners is null ? 0 : Instance._listeners.GetInvocationList().Length;
+
+            _listeners -= @delegate;
+            SubscribersCount = _listeners.GetInvocationList().Length;
         }
 
-        /// <summary>
-        ///     Called by Android SDK java class
-        /// </summary>
-        /// <param name="enumINT"></param>
-        public void InvokeEyeTrackerAvailabilityChanged(string enumINT)
+        protected override void OnAvailabilityChanged(InseyeEyeTrackerAvailability availability)
         {
-            if (int.TryParse(enumINT, out var parsed))
-                _eventContainer.SetEvent((InseyeEyeTrackerAvailability) parsed);
-            else
-                Debug.LogError($"Failed to parse availability event: {enumINT}");
+            _availabilitySource.SetEvent(availability);
+        }
+
+        protected override void OnSDKStateChanged(InseyeSDKState sdkState)
+        {
+            _stateSource.SetEvent(sdkState);
         }
     }
 }
