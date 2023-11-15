@@ -22,15 +22,21 @@ namespace Inseye.Android.Internal.JavaInterop
         private bool _initialized;
 
         private AndroidJavaClass _javaClass;
-
+        public enum LogLevel
+        {
+            Debug = 3,
+            Error = 6,
+            Info = 4,
+            Verbose = 2,
+            Warn = 5
+        }
+        
         public ErrorCodes Initialize(IntPtr statePointer, long timeout)
         {
             ThrowIfNotOnMainThread();
             try
             {
-                if (!_initialized)
-                    _javaClass = new AndroidJavaClass("com.inseye.unitysdk.UnitySDK");
-                _initialized = true;
+                MaybeInitializeClass();
                 return (ErrorCodes) _javaClass.CallStatic<int>("initialize", (long) statePointer, timeout);
             }
             catch (AndroidJavaException androidJavaException)
@@ -44,6 +50,12 @@ namespace Inseye.Android.Internal.JavaInterop
                 throw new SDKInitializationException("Unchecked exception at Android Java class initialization",
                     exception);
             }
+        }
+
+        public void SetLogLevel(LogLevel level)
+        {
+            MaybeInitializeClass();
+            _javaClass.CallStatic("setLoggingLevel", (int) level);
         }
         
         /// <summary>
@@ -169,6 +181,13 @@ namespace Inseye.Android.Internal.JavaInterop
                 _javaClass = null;
                 _initialized = false;
             }
+        }
+
+        private void MaybeInitializeClass()
+        {
+            if (!_initialized)
+                _javaClass = new AndroidJavaClass("com.inseye.unitysdk.UnitySDK");
+            _initialized = true;
         }
 
         private void ThrowIfNotInitialized()

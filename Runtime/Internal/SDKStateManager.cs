@@ -11,7 +11,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Inseye.Internal.Interfaces;
+using UnityEngine;
 
 namespace Inseye.Internal
 {
@@ -59,9 +61,20 @@ namespace Inseye.Internal
                 {
                     _listeners.RemoveAt(index);
                 }
+#if DEBUG_INSEYE_SDK
+            var sb = new StringBuilder("Listeners at the end of RemoveListenerCall: ");
+            foreach (var listener in _listeners)
+            {
+                if (listener.TryGetTarget(out var target))
+                    sb = sb.Append(target.GetType().FullName).Append(", ");
+            }
 
+            sb = sb.Append("\nRemoved listener: ").Append(user?.GetType().FullName);
+            sb = sb.Append($"New state: {sharedInseyeSDKState:G}, Current state: {InseyeSDKState:G}");
+            Debug.Log(sb.ToString());
+#endif
             if (sharedInseyeSDKState != InseyeSDKState)
-                TransitionToState(sharedInseyeSDKState);
+                InseyeSDKState = TransitionToState(sharedInseyeSDKState);
         }
 
         void ISDKStateManager.RequireState(IStateUser stateUser)
@@ -73,7 +86,7 @@ namespace Inseye.Internal
                     if (weakRef.TryGetTarget(out var target))
                         sharedInseyeSDKState |= target.RequiredInseyeSDKState;
 
-                InseyeSDKState = TransitionToState(sharedInseyeSDKState |= GetCurrentRequest(_listeners));
+                InseyeSDKState = TransitionToState(sharedInseyeSDKState | GetCurrentRequest(_listeners));
             }
 
             _listeners.Add(new WeakReference<IStateUser>(stateUser));

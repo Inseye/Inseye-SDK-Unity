@@ -43,51 +43,10 @@ namespace Inseye.Android.Internal
         public InseyeAndroidSKDImplementation()
         {
             Application.focusChanged += FocusChangedHandler;
+#if DEBUG_INSEYE_SDK
+            _javaLibrary.SetLogLevel(JavaLibrary.LogLevel.Debug);
+#endif
         }
-
-        // /// <inheritdoc cref="Interfaces.ICalibrationProcedure.ReportReadyToDisplayPoints" />
-        // /// <exception cref="Exceptions.SDKInternalException">
-        // ///     Thrown when SDK is in invalid state or unexpected error code is
-        // ///     returned.
-        // /// </exception>
-        // public void ReportReadyToDisplayPoints()
-        // {
-        //     if ((InseyeSDKState & InseyeSDKState.Calibration) != InseyeSDKState.Calibration)
-        //         throw new SDKInternalException(
-        //             $"Attempt to call {nameof(ReportReadyToDisplayPoints)} was made out of {InseyeSDKState.Calibration:G} state");
-        //     var errorCodes = _javaLibrary.SetReadyToDisplayCalibrationPoint();
-        //     switch (errorCodes)
-        //     {
-        //         case ErrorCodes.Successful:
-        //             break;
-        //         case ErrorCodes.CalibrationTimeout:
-        //             throw new SDKCalibrationException("Calibration timeout");
-        //         case ErrorCodes.NoCalibrationIsOngoing:
-        //             throw new SDKCalibrationException("No calibration is ongoing");
-        //         case ErrorCodes.UnknownErrorCheckErrorMessage:
-        //             throw new SDKInternalException($"Unknown error: {_javaLibrary.GetLastErrorMessage()}");
-        //         default:
-        //             throw new SDKInternalException($"Unknown error: {errorCodes:G}");
-        //     }
-        // }
-        //
-        // public void AbortCalibration()
-        // {
-        //     if ((InseyeSDKState & InseyeSDKState.Calibration) != InseyeSDKState.Calibration)
-        //         return;
-        //     var errorCodes = _javaLibrary.AbortCalibrationProcedure();
-        //     switch (errorCodes)
-        //     {
-        //         case ErrorCodes.Successful:
-        //         case ErrorCodes.SDKIsNotConnectedToService:
-        //         case ErrorCodes.NoCalibrationIsOngoing:
-        //             break;
-        //         case ErrorCodes.UnknownErrorCheckErrorMessage:
-        //             throw new SDKInternalException($"Unknown error: {_javaLibrary.GetLastErrorMessage()}.");
-        //         default:
-        //             throw new SDKInternalException($"Unknown error: {errorCodes:G}");
-        //     }
-        // }
 
         event Action<InseyeEyeTrackerAvailability> ISDKEventsBroker.EyeTrackerAvailabilityChanged
         {
