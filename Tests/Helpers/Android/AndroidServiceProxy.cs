@@ -34,6 +34,18 @@ namespace Tests.Helpers.Android
             ThrowIfDisposed();
             _javaObject.Call("proxyServiceConnect");
         }
+
+        public void MockGazeSource(int udpPort)
+        {
+            ThrowIfDisposed();
+            _javaObject.Call("enableMockServiceGazeDataSource", udpPort);
+        }
+
+        public void DisableGazeSourceMock()
+        {
+            ThrowIfDisposed();
+            _javaObject.Call("disableMockServiceGazeDataSource");
+        }
         
         
         public void Dispose()
