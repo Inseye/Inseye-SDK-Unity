@@ -25,7 +25,7 @@ namespace Tests.Runtime.Android
 		}
 
 		[UnityTest]
-		public IEnumerable TestGazeProviderFinalizer()
+		public IEnumerator TestGazeProviderFinalizer()
 		{
 			// regression test for GazeProvider finalizer on Android which made JNI calls on GC thread thus crashing android application
 			var gazeProvider = InseyeSDK.GetGazeProvider();
