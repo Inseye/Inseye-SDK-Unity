@@ -315,6 +315,7 @@ namespace Inseye.Android.Internal
         private void ExitInitialized()
         {
             _javaLibrary.Dispose(_pinnedStateInt.GetValuePointer());
+            _pinnedStateInt.Value = (int)InseyeSDKState.Uninitialized;
         }
 
         private void EnterGazeReadingState()
@@ -486,7 +487,7 @@ namespace Inseye.Android.Internal
             _sdkStateManager.RemoveListener(user);
             try
             {
-                TransitionToState(_sdkStateManager.InseyeSDKState);
+                MainThreadGuard.OnMainThread(() => TransitionToState(_sdkStateManager.InseyeSDKState));
             }
             catch (Exception exception)
             {
