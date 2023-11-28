@@ -1,7 +1,7 @@
 {
     "name": "Inseye.SDK.Tests.Helpers.Android",
     "rootNamespace": "",
-    "references": [],
+    "references": ["com.inseye.unity.sdk"],
     "includePlatforms": [
         "Android",
         "Editor"

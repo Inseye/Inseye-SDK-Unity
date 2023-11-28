@@ -8,6 +8,7 @@
 // All other rights reserved.
 
 using System;
+using Inseye;
 using UnityEngine;
 
 namespace Tests.Helpers.Android
@@ -20,6 +21,9 @@ namespace Tests.Helpers.Android
         public AndroidServiceProxy()
         {
             using var sdkClass = UnitySDKClass;
+#if DEBUG_INSEYE_SDK
+            sdkClass.CallStatic("setLoggingLevel", 2); // Fixme, temp solution.
+#endif
             _javaObject = sdkClass.CallStatic<AndroidJavaObject>("injectServiceProxy");
         }
 
@@ -46,7 +50,28 @@ namespace Tests.Helpers.Android
             ThrowIfDisposed();
             _javaObject.Call("disableMockServiceGazeDataSource");
         }
-        
+
+        /// <summary>
+        /// Must be called when there is no ongoing calibration.
+        /// </summary>
+        /// <returns></returns>
+        public AndroidCalibrationProxy EnableCalibrationProxy()
+        {
+            if ((InseyeSDK.InseyeSDKState & InseyeSDKState.Calibration) == InseyeSDKState.Calibration)
+                throw new Exception("Must not be called during calibration");
+            ThrowIfDisposed();
+            var jo = _javaObject.Call<AndroidJavaObject>("proxyServiceCalibration");
+            return new AndroidCalibrationProxy(jo);
+        }
+
+        public void RemoveProxyCalibration()
+        {
+            if ((InseyeSDK.InseyeSDKState & InseyeSDKState.Calibration) == InseyeSDKState.Calibration)
+                throw new Exception("Must not be called during calibration");
+            ThrowIfDisposed();
+            _javaObject.Call("removeProxyCalibration");
+            
+        }
         
         public void Dispose()
         {
