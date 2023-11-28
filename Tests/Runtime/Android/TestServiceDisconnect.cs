@@ -12,6 +12,7 @@ using System.Collections;
 using Inseye;
 using NUnit.Framework;
 using Tests.Helpers.Android;
+using UnityEngine;
 using UnityEngine.TestTools;
 
 namespace Tests.Runtime.Android
@@ -24,6 +25,8 @@ namespace Tests.Runtime.Android
         [SetUp]
         public void Setup()
         {
+            if(Application.isEditor)
+                Assert.Ignore("Android tests are skipped in editor.");
             _androidServiceProxy = new AndroidServiceProxy();
             _initializationKeeper = InseyeSDK.KeepEyeTrackerInitialized();
         }
@@ -83,6 +86,8 @@ namespace Tests.Runtime.Android
         [TearDown]
         public void TearDown()
         {
+            if(Application.isEditor)
+                return;
             _initializationKeeper?.Dispose();
             _androidServiceProxy.Dispose();
         }
