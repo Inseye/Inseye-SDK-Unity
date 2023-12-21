@@ -1,6 +1,6 @@
 # Building documentation
 ## Requirements
-1. Install `docfx` in path
+1. Install `docfx` in path. Build process was tested on version 2.59. Latest version (2.7x.x is not working). 
 2. (Optionally) Install `wkhtmltopdf` in path to build documentation in pdf from.
 ## Building documentation
 
