@@ -209,6 +209,10 @@ namespace Inseye.Android.Internal
                 {
                     case SDKInitializationException.Reason.UnableToConnectToService:
                     case SDKInitializationException.Reason.InvalidServiceVersion:
+                        
+#if DEBUG_INSEYE_SDK
+                        Debug.LogException(exception);
+#endif
                         break;
                     default:
                         Debug.LogException(exception);

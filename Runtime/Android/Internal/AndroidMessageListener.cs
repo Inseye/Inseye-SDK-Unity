@@ -138,6 +138,9 @@ namespace Inseye.Android.Internal
         /// <param name="enumINT"></param>
         public void InvokeEyeTrackerAvailabilityChanged(string enumINT)
         {
+#if DEBUG_INSEYE_SDK
+            Debug.Log($"{nameof(InvokeEyeTrackerAvailabilityChanged)}: {enumINT}");
+#endif
             if (int.TryParse(enumINT, out var parsed))
                 _eventContainer.SetEvent((InseyeEyeTrackerAvailability) parsed);
             else
