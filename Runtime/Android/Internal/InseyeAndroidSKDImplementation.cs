@@ -281,7 +281,7 @@ namespace Inseye.Android.Internal
 #if DEBUG_INSEYE_SDK
             Debug.Log($"{nameof(InseyeAndroidSKDImplementation)}::{nameof(EnterInitialized)}: initializing");
 #endif
-            var initializationReturnCode = _javaLibrary.Initialize(_pinnedStateInt.GetValuePointer(), 2000);
+            var initializationReturnCode = _javaLibrary.Initialize(_pinnedStateInt.GetValuePointer(), InseyeAndroidSettings.ServiceInitializationTimeoutMs);
             switch (initializationReturnCode)
             {
                 case ErrorCodes.Successful:
