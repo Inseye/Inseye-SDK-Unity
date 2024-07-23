@@ -1,6 +1,6 @@
 ﻿// Module name: com.inseye.unity.sdk
 // File name: InseyeAndroidSKDImplementation.cs
-// Last edit: 2023-10-09 by Mateusz Chojnowski mateusz.chojnowski@inseye.com
+// Last edit: 2024-07-23 11:18 by Mateusz Chojnowski mateusz.chojnowski@inseye.com
 // Copyright (c) Inseye Inc.
 // 
 // This file is part of Inseye Software Development Kit subject to Inseye SDK License
@@ -36,9 +36,6 @@ namespace Inseye.Android.Internal
         private Eyes _dominantEye;
         private IGazeDataSource _inseyeIGazeDataSource = EmptyInseyeIGazeDataSource.Instance;
         private InseyeGazeData _internalGazeData;
-
-        private static readonly (InseyeComponentVersion minimum, InseyeComponentVersion maximum) VersionConstraints =
-            new(new InseyeComponentVersion(0, 13, 0), new InseyeComponentVersion(1, 0, 0));
 
         public InseyeAndroidSKDImplementation()
         {
@@ -127,7 +124,8 @@ namespace Inseye.Android.Internal
             AndroidCalibrationProcedure calibrationProcedure = default;
             try
             {
-                var javaObjectProxy = _javaLibrary.StartCalibrationProcedure(dataHandler.GetCalibrationPointRequestPointer(),
+                var javaObjectProxy = _javaLibrary.StartCalibrationProcedure(
+                    dataHandler.GetCalibrationPointRequestPointer(),
                     dataHandler.GetCalibrationPointResponsePointer(),
                     dataHandler.GetCalibrationStatusPointer(), dataHandler.GetPointCounterPointer());
                 calibrationProcedure = new AndroidCalibrationProcedure(dataHandler, javaObjectProxy);
@@ -138,7 +136,7 @@ namespace Inseye.Android.Internal
 #endif
                 return calibrationProcedure;
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 throw new SDKCalibrationException(
                     $"Unexpected result of {nameof(ISDKImplementation.StartCalibration)}", exception);
@@ -209,7 +207,7 @@ namespace Inseye.Android.Internal
                 {
                     case SDKInitializationException.Reason.UnableToConnectToService:
                     case SDKInitializationException.Reason.InvalidServiceVersion:
-                        
+
 #if DEBUG_INSEYE_SDK
                         Debug.LogException(exception);
 #endif
@@ -281,7 +279,8 @@ namespace Inseye.Android.Internal
 #if DEBUG_INSEYE_SDK
             Debug.Log($"{nameof(InseyeAndroidSKDImplementation)}::{nameof(EnterInitialized)}: initializing");
 #endif
-            var initializationReturnCode = _javaLibrary.Initialize(_pinnedStateInt.GetValuePointer(), InseyeAndroidSettings.ServiceInitializationTimeoutMs);
+            var initializationReturnCode = _javaLibrary.Initialize(_pinnedStateInt.GetValuePointer(),
+                InseyeAndroidSettings.ServiceInitializationTimeoutMs);
             switch (initializationReturnCode)
             {
                 case ErrorCodes.Successful:
@@ -289,18 +288,21 @@ namespace Inseye.Android.Internal
                     try
                     {
                         var versions = _javaLibrary.GetVersions();
-                        if (versions.serviceVersion < VersionConstraints.minimum)
-                            throw new SDKInitializationException(
-                                $"Minimum required service version is {VersionConstraints.minimum}. Installed service has {versions.serviceVersion} version",
-                                SDKInitializationException.Reason.InvalidServiceVersion);
-                        if (versions.serviceVersion > VersionConstraints.maximum)
-                            throw new SDKInitializationException(
-                                $"Maximum service version supported by SDK is {VersionConstraints.maximum}. Installed service has {versions.serviceVersion} version");
+                        if (versions.serviceVersion < InseyeAndroidSettings.MinimumServiceVersion)
+                            throw new SDKServiceToLow(
+                                $"Minimum required Android service version is {InseyeAndroidSettings.MinimumServiceVersion}. Installed service has {versions.serviceVersion} version",
+                                versions.serviceVersion, InseyeAndroidSettings.MinimumServiceVersion,
+                                InseyeAndroidSettings.MaximumServiceVersion);
+                        if (versions.serviceVersion > InseyeAndroidSettings.MaximumServiceVersion)
+                            throw new SDKServiceToHigh(
+                                $"Maximum service version supported by SDK is {InseyeAndroidSettings.MaximumServiceVersion}. Installed service has {versions.serviceVersion} version",
+                                versions.serviceVersion, InseyeAndroidSettings.MinimumServiceVersion,
+                                InseyeAndroidSettings.MaximumServiceVersion);
                     }
                     catch (Exception exc)
                     {
                         throw new SDKInitializationException(
-                            $"Failed to obtain service version. Service must have version between {VersionConstraints.minimum} and {VersionConstraints.maximum}.",
+                            $"Failed to obtain service version. Service must have version between {InseyeAndroidSettings.MinimumServiceVersion} and {InseyeAndroidSettings.MaximumServiceVersion}.",
                             SDKInitializationException.Reason.InvalidServiceVersion, exc);
                     }
 
@@ -319,7 +321,7 @@ namespace Inseye.Android.Internal
         private void ExitInitialized()
         {
             _javaLibrary.Dispose(_pinnedStateInt.GetValuePointer());
-            _pinnedStateInt.Value = (int)InseyeSDKState.Uninitialized;
+            _pinnedStateInt.Value = (int) InseyeSDKState.Uninitialized;
         }
 
         private void EnterGazeReadingState()

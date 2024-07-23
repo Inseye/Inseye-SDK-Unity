@@ -1,13 +1,11 @@
 ﻿// Module name: com.inseye.unity.sdk
 // File name: InseyeEyeTrackerAvailability.cs
-// Last edit: 2023-10-09 by Mateusz Chojnowski mateusz.chojnowski@inseye.com
+// Last edit: 2024-07-23 11:18 by Mateusz Chojnowski mateusz.chojnowski@inseye.com
 // Copyright (c) Inseye Inc.
 // 
 // This file is part of Inseye Software Development Kit subject to Inseye SDK License
 // See  https://github.com/Inseye/Licenses/blob/master/SDKLicense.txt.
 // All other rights reserved.
-
-using System;
 
 namespace Inseye
 {

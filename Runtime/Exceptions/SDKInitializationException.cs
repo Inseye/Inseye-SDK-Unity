@@ -1,6 +1,6 @@
 ﻿// Module name: com.inseye.unity.sdk
 // File name: SDKInitializationException.cs
-// Last edit: 2023-10-09 by Mateusz Chojnowski mateusz.chojnowski@inseye.com
+// Last edit: 2024-07-23 11:19 by Mateusz Chojnowski mateusz.chojnowski@inseye.com
 // Copyright (c) Inseye Inc.
 // 
 // This file is part of Inseye Software Development Kit subject to Inseye SDK License
@@ -16,7 +16,7 @@ namespace Inseye.Exceptions
     ///     Exception thrown when SDK fails to perform initialization.
     /// </summary>
     [Serializable]
-    public sealed class SDKInitializationException : SDKException
+    public class SDKInitializationException : SDKException
     {
         /// <summary>
         ///     A list of failed initialization reasons.
