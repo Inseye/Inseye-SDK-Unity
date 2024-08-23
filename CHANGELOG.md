@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [5.3.0] - 2024-08-23
 
-## Added
+### Added
 
 - new values in [InseyeEyeTrackerAvailability](./Runtime/InseyeEyeTrackerAvailability.cs) enum
 
