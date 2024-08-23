@@ -65,7 +65,7 @@ jobs:
           package_json = rf"{workspace}/package.json"
           with open(package_json, "r+") as fh:
               data = json.load(fh)
-              data["version"] = version
+              data["version"] = "${{ env.VERSION }}"
               fh.seek(0)
               json.dump(data, fh, indent=2)
               fh.truncate()
@@ -75,36 +75,37 @@ jobs:
       - name: Zip library with lfs objects
         shell: python
         run: |
-            import pathlib
-            import zipfile
-            import fnmatch
-            
-            
-            version = "${{ env.VERSION }}"
-            workspace = "${{ github.workspace }}"
-            archive_path = "${{ env.ZIPPED_LIB }}"
-            workspace = pathlib.Path(workspace)
-            archive_path = pathlib.Path(archive_path)
-            
-            ignored = {'**/.github/**', '**/.git/**'}
-            paths_to_add: list[pathlib.Path] = []
-            
-            for root, dirs, files in workspace.walk():
+          import os
+          import pathlib
+          import zipfile
+          import fnmatch
+          
+          
+          version = "${{ env.VERSION }}"
+          workspace = "${{ github.workspace }}"
+          archive_path = "${{ env.ZIPPED_LIB }}"
+          workspace = pathlib.Path(workspace)
+          archive_path = pathlib.Path(archive_path)
+          
+          ignored = {'**/.github/**', '**/.git/**'}
+          paths_to_add: list[pathlib.Path] = []
+          
+          for root, _, files in os.walk(str(workspace.absolute())):
+              root = pathlib.Path(root)
               for file in files:
-                file = root / file
-                skip = False
-                for ignored_path in ignored:
-                  if fnmatch.fnmatch(str(file), ignored_path):
-                    print(f'Ignoring {file}')
-                    skip = True
-                    break
-                if skip:
+                  file = pathlib.Path(file)
+                  file = root / file
+                  skip = False
+                  for ignored_path in ignored:
+                      if fnmatch.fnmatch(str(file), ignored_path):
+                          print(f'Ignoring {file}')
+                          skip = True
+                          break
+              if skip:
                   continue
-                paths_to_add.append(root / file)
-            for path in paths_to_add:
-              print(str(path))
-            
-            with zipfile.ZipFile(archive_path, 'w', zipfile.ZIP_DEFLATED) as archive:
+              paths_to_add.append(root / file)
+          
+          with zipfile.ZipFile(archive_path, 'w', zipfile.ZIP_DEFLATED) as archive:
               for path in paths_to_add:
                   archive.write(str(path.absolute()), str(path.relative_to(workspace)))
       - uses: ncipollo/release-action@v1
