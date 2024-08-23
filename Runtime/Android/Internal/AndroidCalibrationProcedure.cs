@@ -118,7 +118,7 @@ namespace Inseye.Android.Internal
             {
                 _calibrationDataHandle.Dispose();
                 _javaCalibrationProcedureProxy.Dispose();
-                InseyeSDK.CurrentImplementation.SDKStateManager.RemoveListener(this);
+                InseyeSDK.CurrentImplementationLazy.SDKStateManager.RemoveListener(this);
             }
         }
     }

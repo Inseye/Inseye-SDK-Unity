@@ -35,7 +35,7 @@ namespace Inseye.Internal
             if (disposing)
                 GC.SuppressFinalize(this);
             _disposed = true;
-            InseyeSDK.CurrentImplementation.SDKStateManager.RemoveListener(this);
+            InseyeSDK.CurrentImplementationLazy.SDKStateManager.RemoveListener(this);
         }
     }
 }

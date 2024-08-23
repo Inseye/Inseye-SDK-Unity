@@ -1,0 +1,115 @@
+﻿name: Create release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version"
+        required: true
+env:
+  RELEASE_MESSAGE: "${{ runner.temp }}/release_message.md"
+  VERSION: ${{ github.event.inputs.version }}
+  ZIPPED_LIB: "${{ runner.temp }}/Inseye-Unity-SDK_${{ github.event.inputs.version }}"
+jobs:
+  prepare_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check semver
+        shell: python
+        run: |
+          import re
+          semver_regex = re.compile(
+              r"^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$")
+          
+          if semver_regex.match("${{ env.VERSION }}") is None:
+              raise Exception("Argument ${{ env.VERSION }} is not a semver")
+      - name: Break on invalid branch
+        if: ${{ github.ref != 'refs/heads/main' }}
+        run: |
+          echo "This workflow can be only run on main branch: ${{ github.ref }}"
+          exit 1
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          submodules: recursive
+      - name: Format changelog and build release message
+        run: python ${{ github.workspace }}/.github/format_changelog.py -v ${{ env.VERSION }} --extract ${{ env.RELEASE_MESSAGE }}
+      - name: Bump version in InseyeSDK.cs and package.json
+        shell: python
+        run: |
+          import re
+          import json
+          
+          version = "${{ env.VERSION }}"
+          workspace = r"${{ github.workspace }}"
+          inseye_sdk_cs = rf"{workspace}/Runtime/InseyeSDK.cs"
+          version = ", ".join(version.split('.'))
+          PATTERN = r'SDKVersion\s*=\s*new\((\d+),\s*(\d+),\s*(\d+)\)'
+
+
+          with open(inseye_sdk_cs, 'r+') as fh:
+              lines = fh.readlines()
+              for i, line in enumerate(lines):
+                  match = re.search(PATTERN, line)
+                  if match:
+                      lines[i] = line.replace(match.group(0), f"SDKVersion = new({version})")
+                      break
+              else:
+                  raise RuntimeError("Could not find the SDK version")
+              fh.seek(0)
+              for line in lines:
+                  fh.write(line)
+              fh.truncate()
+          
+          package_json = rf"{workspace}/package.json"
+          with open(package_json, "r+") as fh:
+              data = json.load(fh)
+              data["version"] = version
+              fh.seek(0)
+              json.dump(data, fh, indent=2)
+              fh.truncate()
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "[Auto] Version bumped to ${{ env.VERSION }}"
+          file_pattern: ":(exclude)${{ env.RELEASE_MESSAGE }}"
+      - name: Zip library with lfs objects
+        shell: python
+        run: |
+            import pathlib
+            import zipfile
+            import fnmatch
+            
+            
+            version = "${{ env.VERSION }}"
+            workspace = "${{ github.workspace }}"
+            archive_path = "${{ env.ZIPPED_LIB }}
+            workspace = pathlib.Path(workspace)
+            archive_path = pathlib.Path(archive_path)
+            
+            ignored = {'**/.github/**', '**/.git/**'}
+            paths_to_add: list[pathlib.Path] = []
+            
+            for root, dirs, files in workspace.walk():
+              for file in files:
+                file = root / file
+                skip = False
+                for ignored_path in ignored:
+                  if fnmatch.fnmatch(str(file), ignored_path):
+                    print(f'Ignoring {file}')
+                    skip = True
+                    break
+                if skip:
+                  continue
+                paths_to_add.append(root / file)
+            for path in paths_to_add:
+              print(str(path))
+            
+            with zipfile.ZipFile(archive_path, 'w', zipfile.ZIP_DEFLATED) as archive:
+              for path in paths_to_add:
+                  archive.write(str(path.absolute()), str(path.relative_to(workspace)))
+      - uses: ncipollo/release-action@v1
+        with:
+          tag: "${{ env.VERSION }}"
+          draft: true
+          bodyFile: "${{ env.RELEASE_MESSAGE }}"
+          artifacts: "${{ env.ZIPPED_LIB }}"

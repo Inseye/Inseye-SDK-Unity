@@ -28,7 +28,7 @@ namespace Inseye.Internal
         public bool GetMostRecentGazeData(out InseyeGazeData inseyeGazePosition)
         {
             ThrowIfDisposed();
-            if (InseyeSDK.CurrentImplementation.GazeDataSource.GetMostRecentGazeData(out inseyeGazePosition))
+            if (InseyeSDK.CurrentImplementationLazy.GazeDataSource.GetMostRecentGazeData(out inseyeGazePosition))
                 return true;
             return false;
         }
@@ -38,7 +38,7 @@ namespace Inseye.Internal
         public ReadOnlySpan<InseyeGazeData> GetGazeDataFromLastFrame()
         {
             ThrowIfDisposed();
-            return InseyeSDK.CurrentImplementation.GazeDataSource.GetGazeDataFromLastFrame();
+            return InseyeSDK.CurrentImplementationLazy.GazeDataSource.GetGazeDataFromLastFrame();
         }
 
         /// <inheritdoc cref="IGazeProvider.GetEnumerator" />
@@ -46,7 +46,7 @@ namespace Inseye.Internal
         public InseyeGazeDataEnumerator GetEnumerator()
         {
             ThrowIfDisposed();
-            return InseyeSDK.CurrentImplementation.GazeDataSource.GetEnumerator();
+            return InseyeSDK.CurrentImplementationLazy.GazeDataSource.GetEnumerator();
         }
 
         /// <inheritdoc cref="IGazeProvider.GetEnumerator" />
@@ -54,7 +54,7 @@ namespace Inseye.Internal
         IEnumerator<InseyeGazeData> IEnumerable<InseyeGazeData>.GetEnumerator()
         {
             ThrowIfDisposed();
-            return InseyeSDK.CurrentImplementation.GazeDataSource.GetEnumerator();
+            return InseyeSDK.CurrentImplementationLazy.GazeDataSource.GetEnumerator();
         }
 
         /// <inheritdoc cref="IGazeProvider.GetEnumerator" />
@@ -95,7 +95,7 @@ namespace Inseye.Internal
             _disposed = true;
             if (disposing)
                 GC.SuppressFinalize(this);
-            InseyeSDK.CurrentImplementation.SDKStateManager.RemoveListener(this);
+            InseyeSDK.CurrentImplementation?.SDKStateManager.RemoveListener(this);
         }
     }
 }

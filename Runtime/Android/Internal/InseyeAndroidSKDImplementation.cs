@@ -145,10 +145,23 @@ namespace Inseye.Android.Internal
 
         InseyeEyeTrackerAvailability ISDKImplementation.GetEyeTrackerAvailability()
         {
-            TransitionToState(InseyeSDKState | InseyeSDKState.Initialized); // temp enter state if needed
             try
             {
+                TransitionToState(InseyeSDKState | InseyeSDKState.Initialized); // temp enter state if needed
                 return _javaLibrary.GetEyeTrackerAvailability();
+            }
+            catch (SDKInitializationException sdkInitializationException)
+            {
+                switch (sdkInitializationException.FailReason)
+                {
+                    case SDKInitializationException.Reason.ConnectionTimeout
+                        or SDKInitializationException.Reason.UnableToConnectToService:
+                        return InseyeEyeTrackerAvailability.UnableToConnectToInseyeService;
+                    case SDKInitializationException.Reason.InvalidServiceVersion:
+                        return InseyeEyeTrackerAvailability.InvalidServiceVersion;
+                    default:
+                        throw;
+                }
             }
             finally
             {

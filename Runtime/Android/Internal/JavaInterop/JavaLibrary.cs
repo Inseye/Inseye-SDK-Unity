@@ -172,7 +172,7 @@ namespace Inseye.Android.Internal.JavaInterop
             }
             catch (AndroidJavaException androidJavaException)
             {
-                throw new SDKInitializationException(
+                throw new SDKInternalException(
                     $"Unchecked android exception during disposing: {androidJavaException.Message}");
             }
             finally
@@ -186,7 +186,17 @@ namespace Inseye.Android.Internal.JavaInterop
         private void MaybeInitializeClass()
         {
             if (!_initialized)
-                _javaClass = new AndroidJavaClass("com.inseye.unitysdk.UnitySDK");
+            {
+                try
+                {
+                    _javaClass = new AndroidJavaClass("com.inseye.unitysdk.UnitySDK");
+                }
+                catch (AndroidJavaException androidJavaException)
+                {
+                    throw new SDKInternalException($"Failed to initialize AARs in SDK. {androidJavaException.Message}", androidJavaException);
+                }
+            }
+
             _initialized = true;
         }
 

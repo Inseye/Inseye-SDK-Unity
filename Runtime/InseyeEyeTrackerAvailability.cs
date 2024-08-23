@@ -11,9 +11,11 @@ namespace Inseye
 {
     /// <summary>
     ///     State of hardware eye tracker
+    ///     Int values of this enum are not meant to be part of API and are subjected to change on demand without SDK version major value change.
     /// </summary>
     public enum InseyeEyeTrackerAvailability
     {
+        // values from service API
         /// <summary>
         ///     The eye tracker is fully functional - gaze data can be provided, a new calibration can be started.
         /// </summary>
@@ -30,7 +32,7 @@ namespace Inseye
         Calibrating = 2,
 
         /// <summary>
-        ///     Eye tracker is connected but is not yet available.
+        ///     Eye tracker is connected to headset but is not yet available.
         /// </summary>
         Unavailable = 5,
 
@@ -42,9 +44,22 @@ namespace Inseye
 
         /// <summary>
         ///     The eyetracker is connected but unavailable for unknown reason.
-        ///     This flag should should only appear if client library is behind service library and new flags were added.
+        ///     This flag should only appear if client library is behind service library and new flags were added.
         /// </summary>
-        Unknown = 7
+        Unknown = 7,
+
+        /// <summary>
+        ///     The SDK is unable to connect to eye tracker service.
+        ///     Service may not be installed on host machine or current service
+        ///     API implementation is not compatible with SDK (breaking changes introduced in API).  
+        /// </summary>
+        /// 
+        UnableToConnectToInseyeService = 8,
+
+        /// <summary>
+        ///     Service version is incompatible with SDK version.
+        /// </summary>
+        InvalidServiceVersion = 9
     }
 
     /// <summary>
@@ -59,7 +74,9 @@ namespace Inseye
         /// <returns>True if eye tracker is connected to vr headset.</returns>
         public static bool IsConnected(this InseyeEyeTrackerAvailability availability)
         {
-            return availability != InseyeEyeTrackerAvailability.Disconnected;
+            return availability is InseyeEyeTrackerAvailability.Available or InseyeEyeTrackerAvailability.Unavailable
+                or InseyeEyeTrackerAvailability.NotCalibrated or InseyeEyeTrackerAvailability.Calibrating
+                or InseyeEyeTrackerAvailability.Unknown;
         }
     }
 }

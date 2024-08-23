@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## Added
+
+- new values in [InseyeEyeTrackerAvailability](./Runtime/InseyeEyeTrackerAvailability.cs) enum
+
+## Changed
+
+- `GetTrackerAvailablility` method should throw exceptions less often
+
+- proper exception is thrown when the library has missing or damaged AARs
+
+- enriched `Readme.md`
+
+- extended article about library installation
+
 ## [5.2.0] - 2024-07-23
 
 ### Added

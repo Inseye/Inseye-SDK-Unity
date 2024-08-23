@@ -21,22 +21,30 @@ namespace Inseye
     /// </summary>
     public static partial class InseyeSDK
     {
-        private static WeakReference<ICalibrationProcedure>? currentCalibrationProcedure;
+        private static WeakReference<ICalibrationProcedure>? _currentCalibrationProcedure;
 
         /// <summary>
         ///     SDK version.
         /// </summary>
-        public static readonly InseyeComponentVersion SDKVersion = new(5, 2, 0);
+        public static readonly InseyeComponentVersion SDKVersion = new(10, 2, 0);
+
+        internal static ISDKImplementation? CurrentImplementation { get; private set; }
 
         /// <summary>
         ///     Current SDK implementation.
         /// </summary>
-        internal static ISDKImplementation CurrentImplementation { get; private set; } = GetDefaultImplementation();
+        internal static ISDKImplementation CurrentImplementationLazy
+        {
+            get
+            {
+                return CurrentImplementation ??= GetDefaultImplementation();
+            }
+        }
 
         /// <summary>
         ///     Current internal SDK state.
         /// </summary>
-        public static InseyeSDKState InseyeSDKState => CurrentImplementation.SDKStateManager.InseyeSDKState;
+        public static InseyeSDKState InseyeSDKState => CurrentImplementationLazy.SDKStateManager.InseyeSDKState;
 
         /// <summary>
         ///     Platform dependent SDK implementation.
@@ -60,7 +68,7 @@ namespace Inseye
             var currentAvailability = InseyeEyeTrackerAvailability.Unavailable;
             try
             {
-                currentAvailability = CurrentImplementation.GetEyeTrackerAvailability();
+                currentAvailability = CurrentImplementationLazy.GetEyeTrackerAvailability();
             }
             catch (Exception exception)
             {
@@ -70,9 +78,14 @@ namespace Inseye
 #endif
             }
 
-            CurrentImplementation.EventBroker.TransferListenersTo(sdkImplementation.EventBroker);
-            CurrentImplementation.SDKStateManager.TransferAllStateUsersTo(sdkImplementation.SDKStateManager);
-            CurrentImplementation.Dispose();
+            if (CurrentImplementation != null)
+            {
+                var curr = CurrentImplementation;
+                curr.EventBroker.TransferListenersTo(sdkImplementation.EventBroker);
+                curr.SDKStateManager.TransferAllStateUsersTo(sdkImplementation.SDKStateManager);
+                curr.Dispose();
+            }
+
             CurrentImplementation = sdkImplementation;
             var newAvailability = InseyeEyeTrackerAvailability.Unavailable;
             try
@@ -98,7 +111,7 @@ namespace Inseye
         /// <exception cref="Exceptions.SDKInitializationException">Exception thrown when SDK fails to perform initialization.</exception>
         public static IDisposable KeepEyeTrackerInitialized()
         {
-            return CurrentImplementation.KeepEyeTrackerInitialized();
+            return CurrentImplementationLazy.KeepEyeTrackerInitialized();
         }
 
         /// <summary>
@@ -108,7 +121,7 @@ namespace Inseye
         /// <exception cref="Exceptions.SDKInitializationException">Exception thrown when SDK fails to perform initialization.</exception>
         public static InseyeEyeTrackerAvailability GetEyetrackerAvailability()
         {
-            return CurrentImplementation.GetEyeTrackerAvailability();
+            return CurrentImplementationLazy.GetEyeTrackerAvailability();
         }
 
         /// <summary>
@@ -123,7 +136,7 @@ namespace Inseye
             availability = InseyeEyeTrackerAvailability.Unavailable;
             try
             {
-                availability = CurrentImplementation.GetEyeTrackerAvailability();
+                availability = CurrentImplementationLazy.GetEyeTrackerAvailability();
                 return true;
             }
             catch (SDKInitializationException)
@@ -146,7 +159,7 @@ namespace Inseye
         /// <exception cref="Exceptions.SDKInitializationException">Exception thrown when SDK fails to perform initialization.</exception>
         public static IGazeProvider GetGazeProvider()
         {
-            return CurrentImplementation.GetGazeProvider();
+            return CurrentImplementationLazy.GetGazeProvider();
         }
 
         /// <summary>
@@ -160,8 +173,8 @@ namespace Inseye
         /// </exception>
         public static ICalibrationProcedure StartCalibration()
         {
-            var calibration = CurrentImplementation.StartCalibration();
-            currentCalibrationProcedure = new WeakReference<ICalibrationProcedure>(calibration);
+            var calibration = CurrentImplementationLazy.StartCalibration();
+            _currentCalibrationProcedure = new WeakReference<ICalibrationProcedure>(calibration);
             return calibration;
         }
 
@@ -170,7 +183,7 @@ namespace Inseye
         /// </summary>
         public static void AbortCalibration()
         {
-            if (currentCalibrationProcedure is not null && currentCalibrationProcedure.TryGetTarget(out var target))
+            if (_currentCalibrationProcedure is not null && _currentCalibrationProcedure.TryGetTarget(out var target))
                 target.AbortCalibration();
         }
 
@@ -183,7 +196,7 @@ namespace Inseye
         {
             try
             {
-                return CurrentImplementation.GetVersions();
+                return CurrentImplementationLazy.GetVersions();
             }
             catch (SDKInitializationException)
             {
@@ -200,7 +213,7 @@ namespace Inseye
         /// <returns>Most accurate eye or both.</returns>
         public static Eyes GetMostAccurateEye()
         {
-            return CurrentImplementation.GetMostAccurateEye();
+            return CurrentImplementationLazy.GetMostAccurateEye();
         }
 
 
@@ -209,8 +222,8 @@ namespace Inseye
         /// </summary>
         public static event Action<InseyeEyeTrackerAvailability> EyeTrackerAvailabilityChanged
         {
-            add => CurrentImplementation.EventBroker.EyeTrackerAvailabilityChanged += value;
-            remove => CurrentImplementation.EventBroker.EyeTrackerAvailabilityChanged -= value;
+            add => CurrentImplementationLazy.EventBroker.EyeTrackerAvailabilityChanged += value;
+            remove => CurrentImplementationLazy.EventBroker.EyeTrackerAvailabilityChanged -= value;
         }
 
         /// <summary>
@@ -218,8 +231,8 @@ namespace Inseye
         /// </summary>
         public static event Action<Eyes> MostAccurateEyeChanged
         {
-            add => CurrentImplementation.EventBroker.MostAccurateEyeChanged += value;
-            remove => CurrentImplementation.EventBroker.MostAccurateEyeChanged -= value;
+            add => CurrentImplementationLazy.EventBroker.MostAccurateEyeChanged += value;
+            remove => CurrentImplementationLazy.EventBroker.MostAccurateEyeChanged -= value;
         }
     }
 }

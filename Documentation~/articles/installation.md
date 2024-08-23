@@ -1,8 +1,23 @@
 # The SDK installation in a Unity project
 *created by [Mateusz Chojnowski](mailto:mateusz.chojnowski@inseye.com)*
 
-1. Download the SDK from the [Github repository](https://github.com/Inseye/Inseye-Unity-SDK)
-2. Add the SDK to project:
+## With git url
+
+1. Open package manager:
+
+[<img src="../images/install_package_unity.png" width="350"/>](../images/install_package_unity.png)
+
+- Open `Add package from git URL...`.
+
+[<image src="../images/install_package_git.png" width="450"/>](../images/install_package_git.png)
+
+- Paste `https://github.com/Inseye/Inseye-SDK-Unity.git`
+
+## Manual installation
+
+1. Download the SDK from the [Github repository release page](https://github.com/Inseye/Inseye-SDK-Unity/releases/latest) (**download 'Inseye-SDK-Unity_XXX.zip' and not 'Source code'**) 
+2. Unpack the zip archive.
+3. Add the SDK to project:
 - Open Unity package manager by opening `Window` menu from the top bar and selecting `Package Manager` option
 
 [<img src="../images/install_package_unity.png" width="350"/>](../images/install_package_unity.png)

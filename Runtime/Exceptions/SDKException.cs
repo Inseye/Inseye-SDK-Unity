@@ -18,17 +18,17 @@ namespace Inseye.Exceptions
     {
         internal SDKException()
         {
-            SDKImplementationName = InseyeSDK.CurrentImplementation.GetType().FullName;
+            SDKImplementationName = InseyeSDK.CurrentImplementation?.GetType().FullName ?? "null";
         }
 
         internal SDKException(string message) : base(message)
         {
-            SDKImplementationName = InseyeSDK.CurrentImplementation.GetType().FullName;
+            SDKImplementationName = InseyeSDK.CurrentImplementation?.GetType().FullName ?? "null";
         }
 
         internal SDKException(string message, Exception nestedException) : base(message, nestedException)
         {
-            SDKImplementationName = InseyeSDK.CurrentImplementation.GetType().FullName;
+            SDKImplementationName = InseyeSDK.CurrentImplementation?.GetType().FullName ?? "null";
         }
 
         public InseyeComponentVersion SDKVersion { get; } = InseyeSDK.SDKVersion;
