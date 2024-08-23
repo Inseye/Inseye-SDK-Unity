@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set environment variables
-        shell: |
+        run: |
           echo "RELEASE_MESSAGE=${{ runner.temp }}/release_message.md" >> $GITHUB_ENV 
           echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
           echo "ZIPPED_LIB=${{ runner.temp }}/Inseye-Unity-SDK_${{ github.event.inputs.version }}" >> $GITHUB_ENV
