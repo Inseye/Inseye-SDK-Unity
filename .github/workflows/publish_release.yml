@@ -14,7 +14,7 @@ jobs:
         run: |
           echo "RELEASE_MESSAGE=${{ runner.temp }}/release_message.md" >> $GITHUB_ENV 
           echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
-          echo "ZIPPED_LIB=${{ runner.temp }}/Inseye-Unity-SDK_${{ github.event.inputs.version }}" >> $GITHUB_ENV
+          echo "ZIPPED_LIB=${{ runner.temp }}/Inseye-Unity-SDK_${{ github.event.inputs.version }}.zip" >> $GITHUB_ENV
       - name: Check semver
         shell: python
         run: |
@@ -82,7 +82,7 @@ jobs:
             
             version = "${{ env.VERSION }}"
             workspace = "${{ github.workspace }}"
-            archive_path = "${{ env.ZIPPED_LIB }}
+            archive_path = "${{ env.ZIPPED_LIB }}"
             workspace = pathlib.Path(workspace)
             archive_path = pathlib.Path(archive_path)
             
