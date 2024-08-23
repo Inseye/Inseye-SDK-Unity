@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - new values in [InseyeEyeTrackerAvailability](./Runtime/InseyeEyeTrackerAvailability.cs) enum
 
-## Changed
+### Changed
 
 - `GetTrackerAvailablility` method should throw exceptions less often
 
