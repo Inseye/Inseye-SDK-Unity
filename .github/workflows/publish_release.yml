@@ -101,9 +101,9 @@ jobs:
                           print(f'Ignoring {file}')
                           skip = True
                           break
-              if skip:
-                  continue
-              paths_to_add.append(root / file)
+                  if skip:
+                      continue
+                  paths_to_add.append(root / file)
           
           with zipfile.ZipFile(archive_path, 'w', zipfile.ZIP_DEFLATED) as archive:
               for path in paths_to_add:
