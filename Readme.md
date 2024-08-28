@@ -22,4 +22,4 @@ There are multiple articles that cover:
 # License
 
 This repository is part of Inseye Software Development Kit.
-By using content of this repository you agree to SDK [License](./UnityPackage/LICENSE).
+By using content of this repository you agree to SDK [License](./LICENSE).
