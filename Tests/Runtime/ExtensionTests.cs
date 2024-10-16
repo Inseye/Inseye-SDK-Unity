@@ -2,6 +2,7 @@
 using Inseye.Extensions;
 using NUnit.Framework;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Inseye.Tests
 {
@@ -24,7 +25,21 @@ namespace Inseye.Tests
                 LeftEyePosition = new Vector2(5, -3),
                 RightEyePosition = new Vector2(8, -2)
             }
-        }; 
+        };
+
+        [SetUp]
+        public void Setup()
+        {
+            var gameObject = new GameObject();
+            gameObject.AddComponent<Camera>();
+            gameObject.tag = "MainCamera";
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Object.Destroy(Camera.main!.gameObject);
+        }
         [Test]
         public void TestGazeMeanPositionBoth()
         {
@@ -57,6 +72,17 @@ namespace Inseye.Tests
             var expectedySum = (-1f - 10f - 2f) / 3;
             Assert.AreEqual(expectedxSum, right.x, float.Epsilon);
             Assert.AreEqual(expectedySum, right.y, float.Epsilon);
+        }
+
+        [Test]
+        public void TestWorldToTrackerAndTrackerToWorld()
+        {
+            var world = new Vector3(0.7f, 0.5f, 2);
+            var camTransform = Camera.main!.transform;
+            var distanceFromCamera = Vector3.Distance(world, camTransform.position);
+            var tracker = world.WorldToTrackerPoint(camTransform);
+            var worldBack = tracker.TrackerToWorldPoint(distanceFromCamera, camTransform);
+            Assert.AreEqual(world, worldBack);
         }
     }
 }
