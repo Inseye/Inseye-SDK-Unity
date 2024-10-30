@@ -1,6 +1,6 @@
 // Module name: com.inseye.unity.sdk.samples.adapter
 // File name: InseyeEyeGazeInputAdapter.cs
-// Last edit: 2023-10-05 by Mateusz Chojnowski mateusz.chojnowski@inseye.com
+// Last edit: 2024-10-30 by Mateusz Chojnowski mateusz.chojnowski@inseye.com
 // Copyright (c) Inseye Inc.
 // 
 // This file is part of Inseye Software Development Kit subject to Inseye SDK License
@@ -30,11 +30,11 @@ using EyeGazeDevice = UnityEngine.XR.OpenXR.Features.Interactions.EyeGazeInterac
 #else
 namespace Inseye.Adapter
 {
-    [Preserve]
+    [UnityEngine.Scripting.Preserve]
     [InputControlLayout(displayName = "Inseye Gaze Device", isGenericTypeOfDevice = false)]
     internal class EyeGazeDevice : InputDevice
     {
-        [Preserve]
+        [UnityEngine.Scripting.Preserve]
         [InputControl(offset = 0, usages = new[] {"Device", "gaze"})]
         public PoseControl pose { get; private set; }
 
