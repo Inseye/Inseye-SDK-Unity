@@ -18,8 +18,17 @@ namespace Inseye.Internal
     internal sealed class InseyeIGazeDataSourceFromInseyeIGazeProvider : IGazeDataSource, IVersionedSpan<GazeData>
     {
         private readonly IEyeTrackerReader _reader;
+        /// <summary>
+        /// Raw gaze data from service.
+        /// </summary>
         private (int version, int elements, GazeData[] array) _gazeData = (-1, 0, new GazeData[50]);
+        /// <summary>
+        /// Gaze data for Unity applications
+        /// </summary>
         private (int version, InseyeGazeData[] array) _inseyeGazeData = (-3, System.Array.Empty<InseyeGazeData>());
+        /// <summary>
+        /// Latest gaze data from Unity applications
+        /// </summary>
         private (int version, InseyeGazeData gazeData) _mostRecentGazeData = (-2, new InseyeGazeData());
 
         internal InseyeIGazeDataSourceFromInseyeIGazeProvider(IEyeTrackerReader reader)
@@ -60,20 +69,26 @@ namespace Inseye.Internal
             gazeData = _mostRecentGazeData.gazeData;
             return true;
         }
-
+        
         public ReadOnlySpan<InseyeGazeData> GetGazeDataFromLastFrame()
         {
+            // update _gazeData with data from udp reader, this may change _gazeData version
             CheckAndUpdateDataArray();
-            if (_gazeData.version != _inseyeGazeData.version)
+            // if processed inseye gaze data version is the same as internal gaze data version then 
+            // conversion was already done and span can be safely returned
+            if (_gazeData.version == _inseyeGazeData.version)
+                return new ReadOnlySpan<InseyeGazeData>(_inseyeGazeData.array, 0, _gazeData.elements);
+            // if there is new data in the from service buffer then translate it to inseye data
+            if (_inseyeGazeData.array.Length < _gazeData.array.Length)
             {
-                if (_inseyeGazeData.array.Length < _gazeData.array.Length)
-                    _inseyeGazeData.array = new InseyeGazeData[_gazeData.array.Length];
-                var sourceArray = _gazeData.array;
-                var targetArray = _inseyeGazeData.array;
-                for (var i = 0; i < _gazeData.elements; i++) targetArray[i] = new InseyeGazeData(sourceArray[i]);
-
-                _inseyeGazeData.version = _gazeData.version;
+                // optionally resize buffer
+                _inseyeGazeData.array = new InseyeGazeData[_gazeData.array.Length];
             }
+            var sourceArray = _gazeData.array;
+            var targetArray = _inseyeGazeData.array;
+            for (var i = 0; i < _gazeData.elements; i++) targetArray[i] = new InseyeGazeData(sourceArray[i]);
+
+            _inseyeGazeData.version = _gazeData.version;
 
             return new ReadOnlySpan<InseyeGazeData>(_inseyeGazeData.array, 0, _gazeData.elements);
         }
@@ -85,9 +100,13 @@ namespace Inseye.Internal
 
         public int Version => _gazeData.version;
         public ReadOnlySpan<GazeData> Array => new(_gazeData.array, 0, _gazeData.elements);
-
+        
+        /// <summary>
+        /// Updates internal gaze data with data read from service. 
+        /// </summary>
         private void CheckAndUpdateDataArray()
         {
+            // perform this update max once per frame
             if (_gazeData.version == Time.frameCount)
                 return;
             var elements = 0;

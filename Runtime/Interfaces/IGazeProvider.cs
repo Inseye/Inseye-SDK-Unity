@@ -18,7 +18,7 @@ namespace Inseye.Interfaces
     {
         /// <summary>
         ///     Pools for most recent gaze position. If new gaze position is available writes it to struct reference.
-        ///     All gaze events that occured between call to this method in current frame and previous
+        ///     Stores all gaze events that occured between call to this method in current frame and previous frame.
         /// </summary>
         /// <param name="inseyeGazePosition">Output gaze position.</param>
         /// <returns>True if gazePosition was updated.</returns>
@@ -36,7 +36,7 @@ namespace Inseye.Interfaces
         /// <summary>
         ///     Returns gaze data enumerator.
         /// </summary>
-        /// <returns>Enumerator that is valid for a single frame.</returns>
+        /// <returns>Enumerator that is valid only for a single frame.</returns>
         public new InseyeGazeDataEnumerator GetEnumerator();
     }
 }
