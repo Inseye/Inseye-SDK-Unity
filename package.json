@@ -1,6 +1,6 @@
 {
   "name": "com.inseye.unity.sdk",
-  "version": "5.4.0",
+  "version": "5.4.1",
   "displayName": "InsEye Unity SDK",
   "description": "InsEye photosensor based eyetracker software development kit.",
   "unity": "2021.3",

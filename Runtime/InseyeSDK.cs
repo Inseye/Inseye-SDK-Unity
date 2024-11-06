@@ -26,7 +26,7 @@ namespace Inseye
         /// <summary>
         ///     SDK version.
         /// </summary>
-        public static readonly InseyeComponentVersion SDKVersion = new(5, 4, 0);
+        public static readonly InseyeComponentVersion SDKVersion = new(5, 4, 1);
 
         internal static ISDKImplementation? CurrentImplementation { get; private set; }
 
