@@ -37,7 +37,7 @@ namespace Inseye.Android.Internal.JavaInterop
             try
             {
                 MaybeInitializeClass();
-                return (ErrorCodes) _javaClass.CallStatic<int>("initialize", (long) statePointer, timeout);
+                return (ErrorCodes) _javaClass.CallStatic<int>("initialize", (long) statePointer, timeout, $"UnitySDK {InseyeSDK.SDKVersion.ToString()}");
             }
             catch (AndroidJavaException androidJavaException)
             {
